@@ -21,16 +21,17 @@ class RedditConnector:
         try:
             subreddit = self.reddit_obj.subreddit(subreddit_name)
             for submission in subreddit.top(limit=limit): # You can change 'top' to 'hot', 'new', etc.
-                subreddit_data.append({
-                    "subreddit": subreddit_name,
-                    "title": submission.title,
-                    "score": submission.score,
-                    "id": submission.id,
-                    "url": submission.url,
-                    "comms_num": submission.num_comments,
-                    "created": submission.created_utc,
-                    "body": submission.selftext # For self posts, otherwise empty string
-                })
+                if submission.selftext.strip():  # Only append if body is non-empty
+                    subreddit_data.append({
+                        "subreddit": subreddit_name,
+                        "title": submission.title,
+                        "score": submission.score,
+                        "id": submission.id,
+                        "url": submission.url,
+                        "comms_num": submission.num_comments,
+                        "created": submission.created_utc,
+                        "body": submission.selftext
+                    })
         except Exception as e:
             logger.error(f"Error fetching data for r/{subreddit_name}: {e}")
         return subreddit_data

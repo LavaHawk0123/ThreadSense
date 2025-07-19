@@ -28,9 +28,9 @@ try:
 except Exception as e:
     logger.error(f"Error fetching subreddits list: {e}")
 
-posts = app.fetch_posts_from_subreddits(subreddits_to_fetch, limit=10)
+posts = app.fetch_posts_from_subreddits(subreddits_to_fetch, limit=100)
 if posts:
-    app.save_posts_to_csv(posts, filename="subreddit_posts.csv")
+    app.save_posts_data(posts, filename="subreddit_posts.json", file_type="json")
     logger.info("Posts fetched and saved successfully.")
 else:
     logger.warning("No posts were fetched.")
@@ -42,11 +42,12 @@ def example_usage():
     posts = app.fetch_posts_from_subreddits(subreddits_to_fetch, limit=10)
     
     if posts:
-        app.save_posts_to_csv(posts, filename="subreddit_posts.csv")
+        app.save_posts_data(posts, filename="subreddit_posts.csv", file_type="csv")
         logger.info("Posts fetched and saved successfully.")
     else:
         logger.warning("No posts were fetched.")
 
+# Testing the example usage
 #if __name__ == "__main__":
 #    example_usage()
 

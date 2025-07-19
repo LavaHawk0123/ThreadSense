@@ -23,6 +23,10 @@ class ThreadSense:
         self.secrets = self.get_user_credentials(secrets_file)
         self.initialize_reddit_connector()
 
+        # Class attributes
+        self.subreddits_list = []
+        self.posts_data = []
+
     def get_user_credentials(self, secrets_file='access/secrets.json'):
         """Load user credentials from a JSON file."""
         if not secrets_file:
@@ -61,19 +65,23 @@ class ThreadSense:
             raise ValueError("Reddit connector is not initialized.")
         if not subreddits_list:
             raise ValueError("Subreddits list cannot be empty.")
-        all_posts = []
         for subreddit_name in subreddits_list:
             logger.info(f"Fetching data for subreddit: {subreddit_name} with limit: {limit}")
             posts = self.reddit_connector.get_subreddit_posts(subreddit_name, limit)
-            all_posts.extend(posts)
-        return all_posts
+            self.posts_data.extend(posts)
+        return self.posts_data
 
-    def save_posts_to_csv(self, posts, filename="subreddit_posts.csv"):
+    def save_posts_data(self, posts, filename="subreddit_posts.csv", file_type="csv"):
         if not posts:
             logger.warning("No posts to save.")
             return
-        df = pd.DataFrame(posts)
-        df.to_csv(filename, index=False)
+        posts_df = pd.DataFrame(posts)
+        if file_type.lower() == "json":
+            posts_df.to_json(filename, orient="records", force_ascii=False, indent=2)
+        elif file_type.lower() == "csv":
+            posts_df.to_csv(filename, index=False)
+        else:
+            raise ValueError("Unsupported file type. Use 'json' or 'csv'.")
         logger.info(f"Posts saved to {filename}")
 
 
