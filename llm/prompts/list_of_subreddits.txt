@@ -1,0 +1,4 @@
+Given the following user request, list Top 10 relevant subreddit names (only the subreddit names, no explanations) where the user could find helpful information or 
+discussions. 
+Generate the list of subreddits as  just the names without the "r/" ahead of it. Generate the output string as a comma-seperated list
+User Request : 
